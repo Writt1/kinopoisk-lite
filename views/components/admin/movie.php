@@ -11,7 +11,7 @@
         <img width="50" src="<?php echo $storage->url($movie->preview()) ?>" alt="<?php echo $movie->name() ?>">
     </td>
     <td style="width: 200px;"><?php echo $movie->name() ?></td>
-    <td><span class="badge bg-warning warn__badge">7.9</span></td>
+    <td><span class="badge bg-warning warn__badge"><?php echo $movie->avgRating() ?></span></td>
     <td>
         <div class="dropdown d-flex justify-content-end">
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

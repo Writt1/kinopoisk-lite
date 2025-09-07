@@ -30,22 +30,6 @@ class MovieService
         ]);
     }
 
-    public function all(): array
-    {
-        $movies =  $this->db->get('movies');
-
-        return array_map(function ($movie) {
-            return new Movie(
-                id: $movie['id'],
-                name: $movie['name'],
-                description: $movie['description'],
-                preview: $movie['preview'],
-                categoryId: $movie['category_id'],
-                createdAt: $movie['created_at'],
-            );
-        }, $movies);
-    }
-
     public function delete(int $id): void
     {
         $this->db->delete('movies', [
@@ -108,6 +92,24 @@ class MovieService
                 categoryId: $movie['category_id'],
                 createdAt: $movie['created_at'],
                 reviews: $this->reviewService->getReviews($movie['id'])
+            );
+        }, $movies);
+    }
+
+    public function all(): array
+    {
+        $movies =  $this->db->get('movies');
+
+        return array_map(function ($movie) {
+            return new Movie(
+                id: $movie['id'],
+                name: $movie['name'],
+                description: $movie['description'],
+                preview: $movie['preview'],
+                categoryId: $movie['category_id'],
+                createdAt: $movie['created_at'],
+                reviews: $this->reviewService->getReviews($movie['id'])
+
             );
         }, $movies);
     }
