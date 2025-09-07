@@ -5,14 +5,17 @@ namespace App\Services;
 use App\Kernel\Auth\User;
 use App\Kernel\Database\DatabaseInterface;
 use App\Kernel\Upload\UploadedFileInterface;
+use App\Models\Category;
 use App\Models\Movie;
 use App\Models\Review;
 
 class MovieService
 {
     public function __construct(
-        private DatabaseInterface $db
-    ) {
+        private DatabaseInterface $db,
+        private ReviewService $reviewService
+    )
+    {
     }
 
     public function store(string $name, string $description, UploadedFileInterface $image, int $category): false|int
@@ -23,37 +26,37 @@ class MovieService
             'name' => $name,
             'description' => $description,
             'preview' => $filePath,
-            'category_id' => $category,
+            'category_id' => $category
         ]);
     }
 
     public function all(): array
     {
-        $movies = $this->db->get('movies');
+        $movies =  $this->db->get('movies');
 
         return array_map(function ($movie) {
             return new Movie(
-                $movie['id'],
-                $movie['name'],
-                $movie['description'],
-                $movie['preview'],
-                $movie['category_id'],
-                $movie['created_at'],
+                id: $movie['id'],
+                name: $movie['name'],
+                description: $movie['description'],
+                preview: $movie['preview'],
+                categoryId: $movie['category_id'],
+                createdAt: $movie['created_at'],
             );
         }, $movies);
     }
 
-    public function destroy(int $id): void
+    public function delete(int $id): void
     {
         $this->db->delete('movies', [
-            'id' => $id,
+            'id' => $id
         ]);
     }
 
     public function find(int $id): ?Movie
     {
         $movie = $this->db->first('movies', [
-            'id' => $id,
+            'id' => $id
         ]);
 
         if (! $movie) {
@@ -61,30 +64,34 @@ class MovieService
         }
 
         return new Movie(
-            $movie['id'],
-            $movie['name'],
-            $movie['description'],
-            $movie['preview'],
-            $movie['category_id'],
-            $movie['created_at'],
-            $this->getReviews($id)
+            id: $movie['id'],
+            name: $movie['name'],
+            description: $movie['description'],
+            preview: $movie['preview'],
+            categoryId: $movie['category_id'],
+            createdAt: $movie['created_at'],
+            reviews: $this->reviewService->getReviews($id)
+
         );
+
     }
 
     public function update(int $id, string $name, string $description, ?UploadedFileInterface $image, int $category): void
     {
+
         $data = [
             'name' => $name,
             'description' => $description,
-            'category_id' => $category,
+            'category_id' => $category
         ];
+
 
         if ($image && ! $image->hasError()) {
             $data['preview'] = $image->move('movies');
         }
 
         $this->db->update('movies', $data, [
-            'id' => $id,
+            'id' => $id
         ]);
     }
 
@@ -94,40 +101,36 @@ class MovieService
 
         return array_map(function ($movie) {
             return new Movie(
-                $movie['id'],
-                $movie['name'],
-                $movie['description'],
-                $movie['preview'],
-                $movie['category_id'],
-                $movie['created_at'],
-                $this->getReviews($movie['id']) // FIXME: в данном случае это лишнее
+                id: $movie['id'],
+                name: $movie['name'],
+                description: $movie['description'],
+                preview: $movie['preview'],
+                categoryId: $movie['category_id'],
+                createdAt: $movie['created_at'],
+                reviews: $this->reviewService->getReviews($movie['id'])
             );
         }, $movies);
     }
 
-    private function getReviews(int $id): array
+    public function best(string $rating): ?array
     {
-        $reviews = $this->db->get('reviews', [
-            'movie_id' => $id,
-        ]);
+        $movies = $this->db->topRated(8.5);
 
-        return array_map(function ($review) {
-            $user = $this->db->first('users', [
-                'id' => $review['user_id'],
-            ]);
-
-            return new Review(
-                $review['id'],
-                $review['rating'],
-                $review['review'],
-                $review['created_at'],
-                new User(
-                    $user['id'],
-                    $user['name'],
-                    $user['email'],
-                    $user['password'],
-                )
+        return array_map(function ($movie) {
+            return new Movie(
+                id: $movie['id'],
+                name: $movie['name'],
+                description: $movie['description'],
+                preview: $movie['preview'],
+                categoryId: $movie['category_id'],
+                createdAt: $movie['created_at'],
+                reviews: $this->reviewService->getReviews($movie['id'])
             );
-        }, $reviews);
+        }, $movies);
     }
+
+
+
 }
+
+

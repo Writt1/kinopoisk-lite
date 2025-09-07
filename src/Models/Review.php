@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use App\Kernel\Auth\User;
+use App\Models\Movie;
 
 class Review
 {
     public function __construct(
         private int $id,
-        private string $rating,
-        private string $comment,
+        private float $rating,
+        private string $review,
         private string $createdAt,
-        private User $user,
-    ) {
+        private ?User $user = null,
+        private ?Movie $movie = null
+    )
+    {
     }
 
     public function id(): int
@@ -25,9 +28,9 @@ class Review
         return $this->rating;
     }
 
-    public function comment(): string
+    public function review(): string
     {
-        return $this->comment;
+        return $this->review;
     }
 
     public function createdAt(): string
@@ -38,5 +41,10 @@ class Review
     public function user(): User
     {
         return $this->user;
+    }
+
+    public function Movie(): Movie
+    {
+        return $this->movie;
     }
 }

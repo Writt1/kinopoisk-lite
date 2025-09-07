@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\Kernel\View\ViewInterface $view
+ * @var \App\Kernel\View\View $view
  * @var array<\App\Models\Category> $categories
  * @var array<\App\Models\Movie> $movies
  */
@@ -35,7 +35,7 @@
                 foreach ($movies as $movie) {
                     $view->component('admin/movie', ['movie' => $movie]);
                 }
-?>
+            ?>
             </tbody>
         </table>
 
@@ -58,14 +58,13 @@
             </tr>
             </thead>
             <tbody>
-            <?php
-    foreach ($categories as $category) {
-        $view->component('admin/category', ['category' => $category]);
-    }
-?>
+            <?php foreach ($categories as $category) {
+                $view->component('admin/category', ['category' => $category]);
+            } ?>
             </tbody>
         </table>
     </div>
 </main>
 
 <?php $view->component('end'); ?>
+

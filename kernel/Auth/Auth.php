@@ -12,16 +12,17 @@ class Auth implements AuthInterface
         private DatabaseInterface $db,
         private SessionInterface $session,
         private ConfigInterface $config
-    ) {
+    )
+    {
     }
 
     public function attempt(string $username, string $password): bool
     {
         $user = $this->db->first($this->table(), [
-            $this->username() => $username,
+            $this->username() => $username
         ]);
 
-        if (! $user) {
+        if (!$user) {
             return false;
         }
 
@@ -32,6 +33,7 @@ class Auth implements AuthInterface
         $this->session->set($this->sessionField(), $user['id']);
 
         return true;
+
     }
 
     public function check(): bool
@@ -46,7 +48,7 @@ class Auth implements AuthInterface
         }
 
         $user = $this->db->first($this->table(), [
-            'id' => $this->session->get($this->sessionField()),
+            'id' => $this->session->get($this->sessionField())
         ]);
 
         if ($user) {
@@ -55,6 +57,7 @@ class Auth implements AuthInterface
                 $user['name'],
                 $user[$this->username()],
                 $user[$this->password()],
+                $user[$this->isAdmin()]
             );
         }
 
@@ -89,5 +92,10 @@ class Auth implements AuthInterface
     public function id(): ?int
     {
         return $this->session->get($this->sessionField());
+    }
+
+    public function isAdmin(): string
+    {
+        return $this->config->get('auth.is_admin');
     }
 }

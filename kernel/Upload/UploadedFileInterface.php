@@ -9,4 +9,5 @@ interface UploadedFileInterface
     public function getExtension(): string;
 
     public function hasError(): bool;
+
 }

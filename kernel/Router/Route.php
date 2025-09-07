@@ -9,7 +9,8 @@ class Route
         private string $method,
         private $action,
         private array $middlewares = []
-    ) {
+    )
+    {
     }
 
     public static function get(string $uri, $action, array $middlewares = []): static
@@ -27,14 +28,19 @@ class Route
         return $this->uri;
     }
 
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
     public function getAction()
     {
         return $this->action;
     }
 
-    public function getMethod(): string
+    public function getMiddlewares(): array
     {
-        return $this->method;
+        return $this->middlewares;
     }
 
     public function hasMiddlewares(): bool
@@ -42,8 +48,4 @@ class Route
         return ! empty($this->middlewares);
     }
 
-    public function getMiddlewares(): array
-    {
-        return $this->middlewares;
-    }
 }

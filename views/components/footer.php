@@ -4,5 +4,5 @@
         <li class="nav-item"><a href="/best" class="nav-link px-2 text-body-secondary">Лучшее</a></li>
         <li class="nav-item"><a href="/categories" class="nav-link px-2 text-body-secondary">Жанры</a></li>
     </ul>
-    <p class="text-center text-body-secondary">© 2023 Кинопоиск Lite</p>
+    <p class="text-center text-body-secondary">© 2025 Кинопоиск Lite</p>
 </footer>

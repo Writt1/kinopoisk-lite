@@ -1,9 +1,9 @@
 <?php
 /**
- * @var \App\Kernel\Auth\AuthInterface $auth
- * @var \App\Kernel\View\ViewInterface $view
- * @var \App\Kernel\Session\SessionInterface $session
  * @var \App\Kernel\Storage\StorageInterface $storage
+ * @var \App\Kernel\Auth\AuthInterface $auth
+ * @var \App\Kernel\Session\SessionInterface $session
+ * @var \App\Kernel\View\View $view
  * @var \App\Models\Movie $movie
  */
 ?>
@@ -16,15 +16,15 @@
             <div class="card mb-3 mt-3 one-movie__item">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <img src="<?php echo $storage->url($movie->preview()) ?>" class="img-fluid rounded one-movie__image" alt="<?php echo $movie->name() ?>">
+                        <img  src="<?php echo $storage->url($movie->preview()) ?>" class="img-fluid rounded one-movie__image" alt="<?php echo $movie->name() ?>">
                         <?php if ($auth->check()) { ?>
                             <form action="/reviews/add" method="post" class="m-3 w-100">
-                                <input type="hidden" value="<?php echo $movie->id() ?>" name="id">
+                                <input type="hidden" name="id" value="<?php echo $movie->id() ?>">
                                 <select
-                                    class="form-select <?php echo $session->has('rating') ? 'is-invalid' : '' ?>"
-                                    name="rating"
-                                    aria-label="Default select example"
-                                >
+                                        class="form-select <?php echo $session->has('rating') ? 'is-invalid' : '' ?>"
+                                        name="rating"
+                                        aria-label="Default select example">
+
                                     <option selected>Оценка</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -38,30 +38,30 @@
                                     <option value="10">10</option>
                                 </select>
                                 <?php if ($session->has('rating')) { ?>
-                                    <div id="name" class="invalid-feedback">
+                                    <div id="rating" class="invalid-feedback">
                                         <?php echo $session->getFlash('rating')[0] ?>
                                     </div>
                                 <?php } ?>
                                 <div class="form-floating mt-2">
                                     <textarea
-                                        class="form-control <?php echo $session->has('comment') ? 'is-invalid' : '' ?>"
-                                        name="comment"
+                                        class="form-control <?php echo $session->has('review') ? 'is-invalid' : '' ?>"
+                                        name="review"
                                         placeholder="Укажи свое мнение о фильме"
                                         id="floatingTextarea2"
                                         style="height: 100px"
                                     ></textarea>
                                     <label for="floatingTextarea2">Комментарий</label>
-                                    <?php if ($session->has('comment')) { ?>
-                                        <div id="name" class="invalid-feedback">
-                                            <?php echo $session->getFlash('comment')[0] ?>
+                                    <?php if ($session->has('review')) { ?>
+                                        <div id="review" class="invalid-feedback">
+                                            <?php echo $session->getFlash('review')[0] ?>
                                         </div>
                                     <?php } ?>
                                 </div>
                                 <button class="btn btn-primary mt-2">Оставить отзыв</button>
                             </form>
                         <?php } else { ?>
-                            <div class="alert alert-warning m-3 w-100">
-                                Для того, чтобы оставить отзыв, необходимо <a href="/login">авторизоваться</a>
+                            <div class="alert alert-info m-3">
+                                Для того, чтобы оставить отзыв нужно <a href="/login">авторизоваться</a>
                             </div>
                         <?php } ?>
                     </div>
@@ -74,7 +74,7 @@
                             <h4>Отзывы</h4>
                             <div class="one-movie__reviews">
                                 <?php foreach ($movie->reviews() as $review) { ?>
-                                    <?php $view->component('review_card', ['review' => $review]) ?>
+                                    <?php $view->component('review_card', ['review' => $review]); ?>
                                 <?php } ?>
                             </div>
                         </div>
@@ -86,3 +86,4 @@
 </main>
 
 <?php $view->component('end'); ?>
+

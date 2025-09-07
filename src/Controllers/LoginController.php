@@ -8,11 +8,12 @@ class LoginController extends Controller
 {
     public function index(): void
     {
-        $this->view(name: 'login', title: 'Вход');
+        $this->view(name:'login', title: 'Авторизация');
     }
 
-    public function login()
+    public function login(): void
     {
+
         $email = $this->request()->input('email');
         $password = $this->request()->input('password');
 
@@ -23,12 +24,14 @@ class LoginController extends Controller
         $this->session()->set('error', 'Неверный логин или пароль');
 
         $this->redirect('/login');
+
     }
 
     public function logout(): void
     {
         $this->auth()->logout();
 
-        $this->redirect('/login');
+        $this->redirect('login');
     }
+
 }

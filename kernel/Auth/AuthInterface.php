@@ -21,4 +21,7 @@ interface AuthInterface
     public function password(): string;
 
     public function sessionField(): string;
+
+    public function isAdmin(): string;
+
 }

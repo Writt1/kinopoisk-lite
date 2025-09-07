@@ -12,8 +12,10 @@ abstract class AbstractMiddleware
         protected RequestInterface $request,
         protected AuthInterface $auth,
         protected RedirectInterface $redirect
-    ) {
+    )
+    {
     }
 
     abstract public function handle(): void;
+
 }

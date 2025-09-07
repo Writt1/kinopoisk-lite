@@ -3,31 +3,41 @@
 namespace App\Controllers;
 
 use App\Kernel\Controller\Controller;
+use App\Services\ReviewService;
 
 class ReviewController extends Controller
 {
-    public function store()
+    private ReviewService $service;
+    public function store(): void
     {
         $validation = $this->request()->validate([
             'rating' => ['required'],
-            'comment' => ['required'],
+            'review' => ['required'],
         ]);
 
         if (! $validation) {
             foreach ($this->request()->errors() as $field => $errors) {
                 $this->session()->set($field, $errors);
             }
-
             $this->redirect("/movie?id={$this->request()->input('id')}");
         }
 
-        $this->db()->insert('reviews', [
-            'rating' => $this->request()->input('rating'),
-            'review' => $this->request()->input('comment'),
-            'movie_id' => $this->request()->input('id'),
-            'user_id' => $this->auth()->id(),
-        ]);
+        $this->service()->store(
+            $this->request()->input('rating'),
+            $this->request()->input('review'),
+            $this->request()->input('id'),
+            $this->auth()->id()
+        );
 
         $this->redirect("/movie?id={$this->request()->input('id')}");
+    }
+
+    public function service(): ReviewService
+    {
+        if (! isset($this->service)) {
+            $this->service = new ReviewService($this->db());
+        }
+
+        return $this->service;
     }
 }

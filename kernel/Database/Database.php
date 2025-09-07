@@ -3,6 +3,8 @@
 namespace App\Kernel\Database;
 
 use App\Kernel\Config\ConfigInterface;
+use App\Kernel\Database\DatabaseInterface;
+use App\Models\Movie;
 
 class Database implements DatabaseInterface
 {
@@ -10,7 +12,8 @@ class Database implements DatabaseInterface
 
     public function __construct(
         private ConfigInterface $config
-    ) {
+    )
+    {
         $this->connect();
     }
 
@@ -39,7 +42,7 @@ class Database implements DatabaseInterface
         $where = '';
 
         if (count($conditions) > 0) {
-            $where = 'WHERE '.implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
         }
 
         $sql = "SELECT * FROM $table $where LIMIT 1";
@@ -58,13 +61,13 @@ class Database implements DatabaseInterface
         $where = '';
 
         if (count($conditions) > 0) {
-            $where = 'WHERE '.implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
         }
 
         $sql = "SELECT * FROM $table $where";
 
         if (count($order) > 0) {
-            $sql .= ' ORDER BY '.implode(', ', array_map(fn ($field, $direction) => "$field $direction", array_keys($order), $order));
+            $sql .= ' ORDER BY ' . implode(', ', array_map(fn ($field, $direction) => "$field $direction", array_keys($order), $order));
         }
 
         if ($limit > 0) {
@@ -76,14 +79,16 @@ class Database implements DatabaseInterface
         $stmt->execute($conditions);
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
     }
+
 
     public function delete(string $table, array $conditions = []): void
     {
         $where = '';
 
         if (count($conditions) > 0) {
-            $where = 'WHERE '.implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
         }
 
         $sql = "DELETE FROM $table $where";
@@ -102,7 +107,7 @@ class Database implements DatabaseInterface
         $where = '';
 
         if (count($conditions) > 0) {
-            $where = 'WHERE '.implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(fn ($field) => "$field = :$field", array_keys($conditions)));
         }
 
         $sql = "UPDATE $table SET $set $where";
@@ -123,13 +128,31 @@ class Database implements DatabaseInterface
         $charset = $this->config->get('database.charset');
 
         try {
-            $this->pdo = new \PDO(
-                "$driver:host=$host;port=$port;dbname=$database;charset=$charset",
+            $this->pdo = new \PDO("$driver:host=$host;port=$port;dbname=$database;charset=$charset",
                 $username,
-                $password
-            );
+                $password);
         } catch (\PDOException $exception) {
             exit("Database connection failed: {$exception->getMessage()}");
         }
+
+
+
+    }
+
+    public function topRated(float $minRating): array
+    {
+        $sql = "
+        SELECT m.*, AVG(r.rating) as avg_rating
+        FROM movies m
+        JOIN reviews r ON r.movie_id = m.id
+        GROUP BY m.id
+        HAVING avg_rating >= :minRating
+        ORDER BY avg_rating DESC
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['minRating' => $minRating]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

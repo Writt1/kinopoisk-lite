@@ -5,18 +5,22 @@ namespace App\Kernel\Router;
 use App\Kernel\Auth\AuthInterface;
 use App\Kernel\Controller\Controller;
 use App\Kernel\Database\DatabaseInterface;
+use App\Kernel\Http\Redirect;
 use App\Kernel\Http\RedirectInterface;
+use App\Kernel\Http\Request;
 use App\Kernel\Http\RequestInterface;
 use App\Kernel\Middleware\AbstractMiddleware;
+use App\Kernel\Session\Session;
 use App\Kernel\Session\SessionInterface;
 use App\Kernel\Storage\StorageInterface;
+use App\Kernel\View\View;
 use App\Kernel\View\ViewInterface;
 
 class Router implements RouterInterface
 {
     private array $routes = [
         'GET' => [],
-        'POST' => [],
+        'POST' => []
     ];
 
     public function __construct(
@@ -27,7 +31,8 @@ class Router implements RouterInterface
         private DatabaseInterface $database,
         private AuthInterface $auth,
         private StorageInterface $storage
-    ) {
+    )
+    {
         $this->initRoutes();
     }
 
@@ -35,7 +40,7 @@ class Router implements RouterInterface
     {
         $route = $this->findRoute($uri, $method);
 
-        if (! $route) {
+        if (!$route) {
             $this->notFound();
         }
 
@@ -49,7 +54,7 @@ class Router implements RouterInterface
         }
 
         if (is_array($route->getAction())) {
-            [$controller, $action] = $route->getAction();
+            [$controller, $action] = $route->getAction(); //[HomeController::class, 'index']
 
             /** @var Controller $controller */
             $controller = new $controller();
@@ -66,6 +71,7 @@ class Router implements RouterInterface
         } else {
             call_user_func($route->getAction());
         }
+
     }
 
     private function notFound(): void
@@ -76,7 +82,7 @@ class Router implements RouterInterface
 
     private function findRoute(string $uri, string $method): Route|false
     {
-        if (! isset($this->routes[$method][$uri])) {
+        if (!isset($this->routes[$method][$uri])) {
             return false;
         }
 
@@ -90,13 +96,19 @@ class Router implements RouterInterface
         foreach ($routes as $route) {
             $this->routes[$route->getMethod()][$route->getUri()] = $route;
         }
+
     }
 
     /**
      * @return Route[]
      */
+
+
+
     private function getRoutes(): array
     {
-        return require_once APP_PATH.'/config/routes.php';
+        return require_once APP_PATH. '/config/routes.php';
     }
 }
+
+

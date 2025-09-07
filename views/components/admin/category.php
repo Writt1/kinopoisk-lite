@@ -4,11 +4,14 @@
  */
 ?>
 
+
 <tr>
     <td style="width: 200px;"><?php echo $category->name() ?></td>
     <td>
         <div class="dropdown d-flex justify-content-end">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Действия </a>
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Действия
+            </a>
             <ul class="dropdown-menu">
                 <li>
                     <a class="dropdown-item" href="/admin/categories/update?id=<?php echo $category->id() ?>">

@@ -9,4 +9,5 @@ class Redirect implements RedirectInterface
         header("Location: $url");
         exit;
     }
+
 }

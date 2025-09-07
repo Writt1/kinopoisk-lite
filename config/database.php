@@ -2,10 +2,10 @@
 
 return [
     'driver' => 'mysql',
-    'host' => 'database',
-    'port' => 3306,
-    'database' => 'lamp',
-    'username' => 'lamp',
-    'password' => 'lamp',
+    'host' => 'mysql4',
+    'port' => '3306',
+    'database' => 'movie_db',
+    'username' => 'root',
+    'password' => 'root',
     'charset' => 'utf8',
 ];

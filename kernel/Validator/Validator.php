@@ -5,7 +5,6 @@ namespace App\Kernel\Validator;
 class Validator implements ValidatorInterface
 {
     private array $errors = [];
-
     private array $data;
 
     public function validate(array $data, array $rules): bool
@@ -40,7 +39,7 @@ class Validator implements ValidatorInterface
 
     private function validateRule(string $key, string $ruleName, string $ruleValue = null): string|false
     {
-        $value = $this->data[$key];
+        $value = $this->data[$key] ?? null;
 
         switch ($ruleName) {
             case 'required':
@@ -60,16 +59,19 @@ class Validator implements ValidatorInterface
                 break;
             case 'email':
                 if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                    return "Field $key must be a valid email address";
+                    return "Field $key must be valid email address";
                 }
                 break;
             case 'confirmed':
-                if ($value !== $this->data["{$key}_confirmation"]) {
+                $confirm = $this->data["{$key}_confirmation"] ?? null;
+                if ($value !== $confirm) {
                     return "Field $key must be confirmed";
                 }
                 break;
+
         }
 
         return false;
     }
+
 }

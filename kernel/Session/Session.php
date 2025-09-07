@@ -32,7 +32,7 @@ class Session implements SessionInterface
         return isset($_SESSION[$key]);
     }
 
-    public function remove(string $key): void
+    public function remove(string $key):void
     {
         unset($_SESSION[$key]);
     }
@@ -41,4 +41,5 @@ class Session implements SessionInterface
     {
         session_destroy();
     }
+
 }

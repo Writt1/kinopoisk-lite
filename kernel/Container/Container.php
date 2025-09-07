@@ -45,7 +45,8 @@ class Container
 
     public readonly StorageInterface $storage;
 
-    public function __construct()
+
+    public function __construct(    )
     {
         $this->registerServices();
     }
@@ -71,5 +72,7 @@ class Container
             $this->auth,
             $this->storage
         );
+
     }
+
 }

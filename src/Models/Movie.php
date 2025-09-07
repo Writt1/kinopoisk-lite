@@ -11,8 +11,9 @@ class Movie
         private string $preview,
         private int $categoryId,
         private string $createdAt,
-        private array $reviews = [],
-    ) {
+        private array $reviews = []
+    )
+    {
     }
 
     public function id(): int
@@ -65,4 +66,6 @@ class Movie
 
         return round(array_sum($ratings) / count($ratings), 1);
     }
+
+
 }

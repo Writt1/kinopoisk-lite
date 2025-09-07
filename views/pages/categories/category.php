@@ -2,6 +2,7 @@
 /**
  * @var \App\Kernel\View\View $view
  * @var array<\App\Models\Movie> $movies
+ * @var \App\Models\Category $category
  */
 
 ?>
@@ -10,7 +11,7 @@
 
 <main>
     <div class="container">
-        <h3 class="mt-3">Новинки</h3>
+        <h3 class="mt-3"><?php echo $category->name()?></h3>
         <hr>
         <div class="movies">
             <?php foreach ($movies as $movie) { ?>

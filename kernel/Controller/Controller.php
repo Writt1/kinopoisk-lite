@@ -4,8 +4,11 @@ namespace App\Kernel\Controller;
 
 use App\Kernel\Auth\AuthInterface;
 use App\Kernel\Database\DatabaseInterface;
+use App\Kernel\Http\Redirect;
 use App\Kernel\Http\RedirectInterface;
+use App\Kernel\Http\Request;
 use App\Kernel\Http\RequestInterface;
+use App\Kernel\Session\Session;
 use App\Kernel\Session\SessionInterface;
 use App\Kernel\Storage\StorageInterface;
 use App\Kernel\View\View;
@@ -26,6 +29,7 @@ abstract class Controller
     private AuthInterface $auth;
 
     private StorageInterface $storage;
+
 
     public function view(string $name, array $data = [], string $title = ''): void
     {
@@ -96,4 +100,5 @@ abstract class Controller
     {
         $this->storage = $storage;
     }
+
 }

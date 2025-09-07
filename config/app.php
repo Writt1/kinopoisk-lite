@@ -2,5 +2,5 @@
 
 return [
     'name' => 'Movie App',
-    'url' => 'http://kinopoisk-lite.lndo.site',
+    'url' => 'http://localhost:8080'
 ];

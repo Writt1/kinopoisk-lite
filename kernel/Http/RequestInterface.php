@@ -21,5 +21,4 @@ interface RequestInterface
 
     public function validate(array $rules): bool;
 
-    public function errors(): array;
-}
+    public function errors(): array;}
